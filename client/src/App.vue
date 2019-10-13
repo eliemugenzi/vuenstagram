@@ -122,11 +122,6 @@ export default {
   .link{
     color:white;
   }
-  // .side__items{
-  //   padding:10px;
-  //   display: block;
-  //   margin-left: 10px;
-  // }
   .appBar{
     height: 40px;
     max-height: 0px;
