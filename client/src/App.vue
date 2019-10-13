@@ -63,7 +63,6 @@
 </template>
 
 <script>
-
 export default {
   name: 'App',
   data(){
@@ -123,7 +122,6 @@ export default {
   .link{
     color:white;
   }
-
   // .side__items{
   //   padding:10px;
   //   display: block;
@@ -134,16 +132,14 @@ export default {
     max-height: 0px;
     margin-bottom: 30px;
   }
-
   .fade-enter-active,.fade-leave-active{
-    transition-property: opacity;
+    transition-property: all;
     transition-duration: 0.25s;
   }
-
   .fade-enter,.fade-leave-active{
     opacity: 0;
+    transform:translateY(30px);
   }
-
   .fade-enter-active{
     transition-delay: 0.25s;
   }

@@ -8,9 +8,11 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "apollo-boost": "^0.4.4",
     "core-js": "^2.6.5",
     "material-design-icons-iconfont": "^5.0.1",
     "vue": "^2.6.10",
+    "vue-apollo": "^3.0.0-rc.7",
     "vue-router": "^3.0.3",
     "vuetify": "^2.1.0",
     "vuex": "^3.0.1"
