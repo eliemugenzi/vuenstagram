@@ -26,6 +26,9 @@ const PostSchema = new Schema({
     type: Number,
     default: 0
   },
+
+  // property ('createdBy')===path
+  // Ref:reference=('User')===model
   createdBy: {
     type: Schema.Types.ObjectId,
     required: true,
