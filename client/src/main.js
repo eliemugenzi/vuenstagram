@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import Vue from 'vue';
 import ApolloClient from 'apollo-boost';
 import VueApollo from 'vue-apollo';
@@ -9,7 +10,7 @@ import vuetify from './plugins/vuetify';
 Vue.use(VueApollo);
 
 // Setup Apolloclient
-const defaultClient = new ApolloClient({
+export const defaultClient = new ApolloClient({
   uri: 'http://localhost:4000/graphql/',
 });
 
@@ -26,3 +27,5 @@ new Vue({
   provide: apolloProvider.provide(),
   render: h => h(App),
 }).$mount('#app');
+
+export default defaultClient;
