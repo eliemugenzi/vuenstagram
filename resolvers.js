@@ -1,4 +1,18 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { config } = require('dotenv');
+
+config();
+
+const tokenIndustry = (user, secret, expiresIn) => {
+  const {username,email}=user
+  return jwt.sign({
+    username,
+    email,
+  }, secret, {
+    expiresIn
+  })
+}
 
 module.exports = {
   Mutation: {
@@ -13,7 +27,9 @@ module.exports = {
         email,
         password
       }).save();
-      return newUser;
+      return {
+        token: tokenIndustry(newUser, process.env.SECRET_KEY, '1hr')
+      };
     },
     addPost: async (_, { title, imageUrl, categories, description, creatorId }, { Post }) => {
       const newPost = await new Post({
@@ -34,7 +50,9 @@ module.exports = {
         throw new Error("Invalid Password");
       }
 
-      return user;
+      return {
+        token: tokenIndustry(user, process.env.SECRET_KEY, '1hr')
+      };
     }
   },
   Query:{
@@ -50,6 +68,19 @@ module.exports = {
         model:'User'
       });
       return posts;
+    },
+    getCurrentUser: async (_,{},{User, currentUser}) => {
+      if (!currentUser) {
+        return null;
+      }
+
+      const user = await User.findOne({ username: currentUser.username })
+        .populate({
+          path: 'favorites',
+          model: 'Post'
+        });
+      
+      return user;
     }
   }
 }

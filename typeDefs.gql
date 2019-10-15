@@ -27,14 +27,19 @@ type Comment {
   commentUser:User!
 }
 
+type Token {
+  token:String!
+}
+
 type Query{
   getUsers:[User]
   getUser:User
   getPosts:[Post]
+  getCurrentUser:User
 }
 
 type Mutation {
-  signupUser(username:String!,email:String!,password:String!):User!
+  signupUser(username:String!,email:String!,password:String!):Token
   addPost(title:String!,imageUrl:String!,categories:[String]!,description:String,creatorId:ID!):Post!
-  signinUser(username:String!,password:String!):User!
+  signinUser(username:String!,password:String!):Token
 }

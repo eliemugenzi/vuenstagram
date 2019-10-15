@@ -1,5 +1,6 @@
 const { ApolloServer } = require('apollo-server');
 const { config } = require('dotenv');
+const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const path = require('path');
 const mongoose = require('mongoose');
@@ -16,12 +17,28 @@ const typeDefs = fs.readFileSync(filePath, 'utf-8');
 const resolvers = require('./resolvers');
 
 
+// Verify JWT token
+const getUser = async token => {
+  if (token) {
+    try {
+      let user = await jwt.verify(token, process.env.SECRET_KEY);
+      return user;
+    } catch (error) {
+      throw new AuthenticationError('Your session has ended, please sign in again');
+    }
+  }
+}
+
 // Initialize Apollo Server
 const server = new ApolloServer({
   typeDefs,
-  context: {
-    User,
-    Post
+  context: async ({ req }) => {
+    const token = req.headers['authorization']
+    return {
+      User,
+      Post,
+      currentUser:await getUser(token)
+    }
   },
   resolvers
 });

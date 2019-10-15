@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable import/no-cycle */
 import Vue from 'vue';
 import ApolloClient from 'apollo-boost';
@@ -12,6 +13,36 @@ Vue.use(VueApollo);
 // Setup Apolloclient
 export const defaultClient = new ApolloClient({
   uri: 'http://localhost:4000/graphql/',
+  // Include Auth token
+  fetchOptions: {
+    credentials: 'include',
+  },
+  request: (operation) => {
+    // If no token in localStorage, add it
+    if (!localStorage.token) {
+      localStorage.setItem('token', '');
+    }
+
+    // Adds the token to the authorization header
+    operation.setContext({
+      headers: {
+        authorization: localStorage.getItem('token'),
+      },
+    });
+  },
+  onError: ({
+    graphQLErrors, networkError,
+  }) => {
+    if (networkError) {
+      console.log('[Network Error]', networkError);
+    }
+
+    if (graphQLErrors) {
+      for (const err of graphQLErrors) {
+        console.dir(err);
+      }
+    }
+  },
 });
 
 const apolloProvider = new VueApollo({
@@ -26,6 +57,10 @@ new Vue({
   vuetify,
   provide: apolloProvider.provide(),
   render: h => h(App),
+  created() {
+    // Execute getCurrentUser query
+    this.$store.dispatch('getCurrentUser');
+  },
 }).$mount('#app');
 
 export default defaultClient;
