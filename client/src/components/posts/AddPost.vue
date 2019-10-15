@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name:'AddPost'
-}
+  name: 'AddPost',
+};
 </script>

@@ -31,18 +31,19 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions } from 'vuex';
+
 export default {
-  name: "home",
+  name: 'home',
   data() {},
   methods: {
     handleGetCarouselPosts() {
       // Reach out to Vuex store, fire action that gets posts for carousel
-      this.$store.dispatch("getPosts");
+      this.$store.dispatch('getPosts');
     },
 
     // Alternative way of mapping the actions to be like `this.getPosts()`
-    ...mapActions["getPosts"]
+    ...mapActions.getPosts,
   },
   created() {
     this.handleGetCarouselPosts();
@@ -55,8 +56,8 @@ export default {
     },
 
     // Another way of getting data from Vuex store
-    ...mapGetters(["loading"])
-  }
+    ...mapGetters(['loading']),
+  },
 };
 </script>
 

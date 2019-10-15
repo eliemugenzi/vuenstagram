@@ -65,56 +65,52 @@
 <script>
 export default {
   name: 'App',
-  data(){
+  data() {
     return {
-      sideNav:false
-    }
+      sideNav: false,
+    };
   },
-  computed:{
-    horizontalNavItems:()=>{
-      return[
-        {
-          icon:'chat',
-          title:'Posts',
-          link:'/posts'
-        },
-        {
-          icon:'lock_open',
-          title:'Sign In',
-          link:'/signin'
-        },
-        {
-          icon:'create',
-          title:'Sign Up',
-          link:'/signup'
-        }
-      ]
+  computed: {
+    horizontalNavItems: () => [
+      {
+        icon: 'chat',
+        title: 'Posts',
+        link: '/posts',
+      },
+      {
+        icon: 'lock_open',
+        title: 'Sign In',
+        link: '/signin',
+      },
+      {
+        icon: 'create',
+        title: 'Sign Up',
+        link: '/signup',
+      },
+    ],
+    sideNavItems: () => [
+      {
+        icon: 'chat',
+        title: 'Posts',
+        link: '/posts',
+      },
+      {
+        icon: 'lock_open',
+        title: 'Sign In',
+        link: '/signin',
+      },
+      {
+        icon: 'create',
+        title: 'Sign Up',
+        link: '/signup',
+      },
+    ],
+  },
+  methods: {
+    toggleSideNav() {
+      this.sideNav = !this.sideNav;
     },
-    sideNavItems:()=>{
-      return[
-        {
-          icon:'chat',
-          title:'Posts',
-          link:'/posts'
-        },
-        {
-          icon:'lock_open',
-          title:'Sign In',
-          link:'/signin'
-        },
-        {
-          icon:'create',
-          title:'Sign Up',
-          link:'/signup'
-        }
-      ]
-    }
   },
-  methods:{
-    toggleSideNav(){
-      this.sideNav=!this.sideNav;
-    }
-  }
 };
 </script>
 
