@@ -1,4 +1,4 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer, AuthenticationError } = require('apollo-server');
 const { config } = require('dotenv');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
@@ -40,7 +40,11 @@ const server = new ApolloServer({
       currentUser:await getUser(token)
     }
   },
-  resolvers
+  resolvers,
+  formatError: error => ({
+    name: error.name,
+    message: error.message.replace('Context creation failed.','')
+  })
 });
 
 // Connect to the MongoDB database and run the Apollo Server

@@ -7,6 +7,10 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import vuetify from './plugins/vuetify';
+import FormAlert from './components/shared/FormAlert.vue';
+
+// Register a component globally
+Vue.component('form-alert', FormAlert);
 
 Vue.use(VueApollo);
 
@@ -40,6 +44,13 @@ export const defaultClient = new ApolloClient({
     if (graphQLErrors) {
       for (const err of graphQLErrors) {
         console.dir(err);
+        if (err.name === 'AuthenticatinEror') {
+          // Set auth error in state ( to show in snackbar)
+          store.commit('setAuthError', err);
+
+          // signout user(to clear token)
+          store.dispatch('signOut');
+        }
       }
     }
   },
