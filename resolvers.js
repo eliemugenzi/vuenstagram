@@ -53,6 +53,10 @@ module.exports = {
       return {
         token: tokenIndustry(user, process.env.SECRET_KEY, '1hr')
       };
+    },
+    deleteUser: async (_, { username }, { User }) => {
+      const user = await User.findOneAndRemove({ username });
+      return user;
     }
   },
   Query:{

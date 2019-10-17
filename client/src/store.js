@@ -4,7 +4,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import { defaultClient as apolloClient } from './main';
-import { GET_POSTS, SIGNIN_USER, GET_CURRENT_USER } from './queries';
+import {
+  GET_POSTS, SIGNIN_USER, GET_CURRENT_USER, SIGNUP_USER,
+} from './queries';
 import router from './router';
 
 Vue.use(Vuex);
@@ -101,6 +103,32 @@ export default new Vuex.Store({
       await apolloClient.resetStore();
       // Redirects home - kicks users out of private routes
       router.push('/');
+    },
+    signupUser: async ({ commit }, {
+      username,
+      email,
+      password,
+    }) => {
+      localStorage.setItem('token', '');
+      commit('setError', null);
+      commit('setLoading', true);
+      try {
+        const { data: { signupUser } } = await apolloClient.mutate({
+          mutation: SIGNUP_USER,
+          variables: {
+            username,
+            email,
+            password,
+          },
+        });
+        console.log('SIGNUP', signupUser);
+        commit('setLoading', false);
+        localStorage.setItem('token', signupUser.token);
+        router.go();
+      } catch (error) {
+        commit('setLoading', false);
+        console.log(error);
+      }
     },
   },
   getters: {

@@ -37,7 +37,7 @@
                </v-layout>
                <v-layout row>
                   <v-flex xs12>
-                     <v-btn color="accent" type="submit" :loading="loading" :disabled="!isFormValid">
+                     <v-btn color="accent" type="submit" :loading="loading" :disabled="!isFormValid || loading">
                        <template v-slot:loader>
                         <span class="custom-loader">
                           <v-icon light>cached</v-icon>
