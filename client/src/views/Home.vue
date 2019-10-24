@@ -22,6 +22,7 @@
           v-for="post in posts"
           :key="post._id"
           :src="post.imageUrl"
+          @click.native="goToPost(post._id)"
         >
           <h1 id="carousel__title">{{post.title}}</h1>
         </v-carousel-item>
@@ -41,9 +42,12 @@ export default {
       // Reach out to Vuex store, fire action that gets posts for carousel
       this.$store.dispatch('getPosts');
     },
+    goToPost(postId){
+      this.$router.push(`/posts/${postId}`);
+    },
 
     // Alternative way of mapping the actions to be like `this.getPosts()`
-    ...mapActions.getPosts,
+    ...mapActions(['getPosts']),
   },
   created() {
     this.handleGetCarouselPosts();
