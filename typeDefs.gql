@@ -31,11 +31,18 @@ type Token {
   token:String!
 }
 
+type PostsPage{
+  posts:[Post]
+  hasMore:Boolean
+}
+
 type Query{
   getUsers:[User]
   getUser:User
   getPosts:[Post]
+  getPost(postId:ID!):Post
   getCurrentUser:User
+  infiniteScrollPosts(pageNum:Int!,pageSize:Int!):PostsPage
 }
 
 type Mutation {
@@ -43,4 +50,5 @@ type Mutation {
   addPost(title:String!,imageUrl:String!,categories:[String]!,description:String,creatorId:ID!):Post!
   signinUser(username:String!,password:String!):Token
   deleteUser(username:String!):User!
+  deletePost(_id:ID!):Post!
 }

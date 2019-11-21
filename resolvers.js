@@ -57,6 +57,10 @@ module.exports = {
     deleteUser: async (_, { username }, { User }) => {
       const user = await User.findOneAndRemove({ username });
       return user;
+    },
+    deletePost: async (_, { _id }, { Post }) => {
+      const post = await Post.findOneAndRemove({ _id });
+      return post;
     }
   },
   Query:{
@@ -85,6 +89,41 @@ module.exports = {
         });
       
       return user;
+    },
+    infiniteScrollPosts: async (_, { pageNum, pageSize }, { Post }) => {
+      let posts;
+      if (pageNum === 1) {
+        posts = await Post.find({}).sort({
+          createdDate: 'desc'
+        }).populate({
+          path: 'createdBy',
+          model: 'User'
+        }).limit(pageSize);
+      } else {
+        // If page number is greater than 1, figure out how many documents to skip
+        const skips = pageSize * (pageNum - 1);
+        posts = await Post.find({}).sort({
+          createdDate: 'desc'
+        }).populate({
+          path: 'createdBy',
+          model: 'User'
+        }).skip(skips).limit(pageSize);
+      }
+
+      const totalDocs = await Post.countDocuments();
+      const hasMore = totalDocs > pageSize * pageNum;
+      return {
+        posts,
+        hasMore
+      }
+    },
+    getPost: async (_, { postId }, { Post }) => {
+      const post = await Post.findById(postId)
+        .populate({
+        path: 'comments.commentUser',
+        model:'User'
+      });
+      return post;
     }
-  }
+  },
 }

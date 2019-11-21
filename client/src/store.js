@@ -5,7 +5,7 @@ import Vuex from 'vuex';
 
 import { defaultClient as apolloClient } from './main';
 import {
-  GET_POSTS, SIGNIN_USER, GET_CURRENT_USER, SIGNUP_USER,
+  GET_POSTS, SIGNIN_USER, GET_CURRENT_USER, SIGNUP_USER, CREATE_POST,
 } from './queries';
 import router from './router';
 
@@ -69,12 +69,10 @@ export default new Vuex.Store({
           },
         });
         commit('setLoading', false);
-        console.log('SIGNIN USER', signinUser);
         localStorage.setItem('token', signinUser.token);
         // Reload the page to make sure the created method is run in main.js (to tun getCurrentuser)
         router.go();
       } catch (error) {
-        console.error(error);
         commit('setError', error);
         commit('setLoading', false);
       }
@@ -85,12 +83,10 @@ export default new Vuex.Store({
         const { data: { getCurrentUser } } = await apolloClient.query({
           query: GET_CURRENT_USER,
         });
-        console.log('USER', getCurrentUser);
         commit('setLoading', false);
         commit('setUser', getCurrentUser);
       } catch (error) {
         commit('setLoading', false);
-        console.log(error);
       }
     },
     signOut: async ({ commit }) => {
@@ -121,12 +117,45 @@ export default new Vuex.Store({
             password,
           },
         });
-        console.log('SIGNUP', signupUser);
         commit('setLoading', false);
         localStorage.setItem('token', signupUser.token);
         router.go();
       } catch (error) {
         commit('setLoading', false);
+      }
+    },
+    addPost: async ({ commit }, payload) => {
+      try {
+        const { data: { addPost } } = await apolloClient.mutate({
+          mutation: CREATE_POST,
+          variables: payload,
+          update: (cache, { data: { addPost: createPost } }) => {
+            // First read the query you want to update
+            const data = cache.readQuery({
+              query: GET_POSTS,
+            });
+
+            // Create updated data
+            data.getPosts.unshift(createPost);
+
+            // Update cache
+            cache.writeQuery({
+              query: GET_POSTS,
+              data,
+            });
+          },
+          // Ensures data is added immediately
+          optimisticResponse: {
+            __typename: 'Mutation',
+            addPost: {
+              __typename: 'Post',
+              _id: -1,
+              ...payload,
+            },
+          },
+        });
+        console.log('CREATED', addPost);
+      } catch (error) {
         console.log(error);
       }
     },
